@@ -22,6 +22,7 @@ namespace Wabang
         public Config Config;
         public Dictionary<long, Auction> MyAuctions = new Dictionary<long, Auction>();
         public Dictionary<long, Auction> MyBids = new Dictionary<long, Auction>();
+        public Dictionary<long, Auction> AlreadySeen = new Dictionary<long, Auction>();
         public NumberFormatInfo Gold = new NumberFormatInfo { NumberGroupSizes = new[] { 2, 2, 0 }, NumberGroupSeparator = "." };
         public bool DoingIt = true;
         public Guid RunningThreadId;
@@ -31,9 +32,6 @@ namespace Wabang
         public Form1()
         {
             InitializeComponent();
-            //Notifications.Add(new Blah { Text = "Really really  really  really  really  really  really  really  really  really  really  really  really  really  really  really  really  really  really long string." });
-            //Notifications.Add(new Blah { Text = "Short string.", Url = "http://www.google.com" });
-            //fastObjectListView1.SetObjects(Notifications);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -114,6 +112,14 @@ namespace Wabang
                             }
                         }
 
+                        foreach (var oldAuctionId in AlreadySeen.Keys.ToList())
+                        {
+                            if (!newAuctions.ContainsKey(oldAuctionId))
+                            {
+                                AlreadySeen.Remove(oldAuctionId);
+                            }
+                        }
+
                         foreach (var oldAuctionId in MyBids.Keys.ToList())
                         {
                             if (!newAuctions.ContainsKey(oldAuctionId))
@@ -146,8 +152,12 @@ namespace Wabang
 
                         foreach (var auction in buyouts.OrderBy(a => a.item))
                         {
-                            var item = Config.GetItemDetails(auction.item);
-                            AddNotification(string.Format("{0} -  You can make a profit of {3} by paying {2} for {4}x {1}.", DateTime.Now.ToString("s"), item.name, auction.buyout.ToString("#,#", Gold), (item.sellPrice * auction.quantity - auction.buyout).ToString("#,#", Gold), auction.quantity), "https://us.battle.net/wow/en/vault/character/auction/horde/browse?qual=0&itemId=" + auction.item);
+                            if (!AlreadySeen.ContainsKey(auction.auc))
+                            {
+                                AlreadySeen.Add(auction.auc, auction);
+                                var item = Config.GetItemDetails(auction.item);
+                                AddNotification(string.Format("{0} -  You can make a profit of {3} by paying {2} for {4}x {1}.", DateTime.Now.ToString("s"), item.name, auction.buyout.ToString("#,#", Gold), (item.sellPrice*auction.quantity - auction.buyout).ToString("#,#", Gold), auction.quantity), "https://us.battle.net/wow/en/vault/character/auction/horde/browse?qual=0&itemId=" + auction.item);
+                            }
                         }
 
                         foreach (var auction in bids.OrderBy(a => a.item))
