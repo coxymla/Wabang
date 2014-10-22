@@ -83,7 +83,7 @@ namespace Wabang
 
                         var newAuctions = new Dictionary<long, Auction>();
                         var newMyAuctions = new Dictionary<long, Auction>();
-                        foreach (var auction in auctions.horde.auctions)
+                        foreach (var auction in auctions.auctions.auctions)
                         {
                             if (Config.MyCharacters.Contains(auction.owner))
                             {
@@ -130,7 +130,7 @@ namespace Wabang
 
                         var buyouts = new List<Auction>();
                         var bids = new List<Auction>();
-                        foreach (var auction in auctions.horde.auctions)
+                        foreach (var auction in auctions.auctions.auctions)
                         {
                             try
                             {
@@ -154,9 +154,10 @@ namespace Wabang
                         {
                             if (!AlreadySeen.ContainsKey(auction.auc))
                             {
+                                //https://us.battle.net/wow/en/vault/character/auction/browse?n=dense+grinding+stone&filterId=-1&minLvl=-1&maxLvl=-1&qual=1&start=0&end=20&sort=bid&reverse=false
                                 AlreadySeen.Add(auction.auc, auction);
                                 var item = Config.GetItemDetails(auction.item);
-                                AddNotification(string.Format("{0} -  You can make a profit of {3} by paying {2} for {4}x {1}.", DateTime.Now.ToString("s"), item.name, auction.buyout.ToString("#,#", Gold), (item.sellPrice*auction.quantity - auction.buyout).ToString("#,#", Gold), auction.quantity), "https://us.battle.net/wow/en/vault/character/auction/horde/browse?qual=0&itemId=" + auction.item);
+                                AddNotification(string.Format("{0} -  You can make a profit of {3} by paying {2} for {4}x {1}.", DateTime.Now.ToString("s"), item.name, auction.buyout.ToString("#,#", Gold), (item.sellPrice*auction.quantity - auction.buyout).ToString("#,#", Gold), auction.quantity), "https://us.battle.net/wow/en/vault/character/auction/browse?qual=0&itemId=" + auction.item);
                             }
                         }
 
@@ -166,7 +167,7 @@ namespace Wabang
                             {
                                 MyBids.Add(auction.auc, auction);
                                 var item = Config.GetItemDetails(auction.item);
-                                AddNotification(string.Format("{0} -  You can make a profit of {3} by bidding {2} for {4}x {1}.", DateTime.Now.ToString("s"), item.name, auction.bid.ToString("#,#", Gold), (item.sellPrice*auction.quantity - auction.bid).ToString("#,#", Gold), auction.quantity), "https://us.battle.net/wow/en/vault/character/auction/horde/browse?qual=0&itemId=" + auction.item);
+                                AddNotification(string.Format("{0} -  You can make a profit of {3} by bidding {2} for {4}x {1}.", DateTime.Now.ToString("s"), item.name, auction.bid.ToString("#,#", Gold), (item.sellPrice*auction.quantity - auction.bid).ToString("#,#", Gold), auction.quantity), "https://us.battle.net/wow/en/vault/character/auction/browse?qual=0&itemId=" + auction.item);
                             }
                         }
 

@@ -49,20 +49,21 @@ namespace Wabang
         public long lastModified { get; set; }
     }
 
-    //{
-    //"realm":{"name":"Jubei'Thos","slug":"jubeithos"},
-    //"alliance":{"auctions":[
-    //    {"auc":1605125097,"item":76662,"owner":"Arizul","bid":1150000,"buyout":1200000,"quantity":1,"timeLeft":"VERY_LONG"},
+    //    {
+    //"realm":{"name":"Internal Record 3697","slug":"internal-record-3697"},
+    //"auctions":{"auctions":[
+    //    {"auc":1105482464,"item":24956,"owner":"Flag","ownerRealm":"Jubei'Thos","bid":940500,"buyout":990000,"quantity":1,"timeLeft":"LONG","rand":-19,"seed":1476788247,"context":1},
     [Serializable]
     public class Auctions
     {
         public dynamic realm { get; set; }
-        public dynamic alliance { get; set; }
-        public Horde horde { get; set; }
+        //public dynamic alliance { get; set; }
+        //public Horde horde { get; set; }
+        public AuctionsArray auctions { get; set; }
     }
 
     [Serializable]
-    public class Horde
+    public class AuctionsArray
     {
         public Auction[] auctions { get; set; }
     }
