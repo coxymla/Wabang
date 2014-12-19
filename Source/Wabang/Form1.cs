@@ -43,6 +43,9 @@ namespace Wabang
                     using (var file = File.OpenRead("config.bin"))
                     {
                         Config = (Config)new BinaryFormatter().Deserialize(file);
+                        characters.Text = string.Join(",", Config.MyCharacters);
+                        realm.Text = Config.MyRealm;
+                        browserExe.Text = Config.BrowserExe;
                     }
                 }
                 catch (Exception)
@@ -55,6 +58,7 @@ namespace Wabang
                 CreateNewConfig();
             }
 
+            //AddNotification("blah", "http://google.com");
             StartDoingIt();
         }
 
@@ -218,8 +222,9 @@ namespace Wabang
             {
                 DoingIt = false;
                 RunningThreadId = Guid.Empty;
-                textBox1.Enabled = true;
-                textBox2.Enabled = true;
+                characters.Enabled = true;
+                realm.Enabled = true;
+                browserExe.Enabled = true;
                 button3.Text = "DoIt";
             }
             else
@@ -250,8 +255,9 @@ namespace Wabang
             Config = new Config
                      {
                          ItemDatabase = new Dictionary<long, Item>(),
-                         MyCharacters = textBox1.Text.Split(','),
-                         MyRealm = textBox2.Text,
+                         MyCharacters = characters.Text.Split(','),
+                         MyRealm = realm.Text,
+                         BrowserExe = browserExe.Text,
                      };
 
             WriteOutConfig();
@@ -260,11 +266,13 @@ namespace Wabang
         private void StartDoingIt()
         {
             button3.Text = "Stop";
-            Config.MyCharacters = textBox1.Text.Split(',');
-            Config.MyRealm = textBox2.Text;
+            Config.MyCharacters = characters.Text.Split(',');
+            Config.MyRealm = realm.Text;
+            Config.BrowserExe = browserExe.Text;
 
-            textBox1.Enabled = false;
-            textBox2.Enabled = false;
+            characters.Enabled = false;
+            realm.Enabled = false;
+            browserExe.Enabled = false;
 
             lock (this)
             {
@@ -296,6 +304,18 @@ namespace Wabang
         private void button4_Click(object sender, EventArgs e)
         {
             Config.LastModified = 0;
+        }
+
+        private void fastObjectListView1_HyperlinkClicked(object sender, HyperlinkClickedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(browserExe.Text) || !File.Exists(browserExe.Text))
+            {
+                e.Handled = false;
+                return;
+            }
+
+            System.Diagnostics.Process.Start(browserExe.Text, e.Url);
+            e.Handled = true;
         }
     }
 }

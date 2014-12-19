@@ -13,6 +13,7 @@ namespace Wabang
     {
         public string[] MyCharacters = new[] { "Deathlance", "Delibird" };
         public string MyRealm = "jubei'thos";
+        public string BrowserExe = @"C:\Users\jcox\Documents\stuff\pm\Bin\Palemoon\palemoon.exe";
         public long LastModified;
         public Dictionary<long, Item> ItemDatabase = new Dictionary<long, Item>();
 
